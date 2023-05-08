@@ -43,10 +43,10 @@ const getSummaryReqBody = (job, experience) => {
     // }
 }
 
-const getCLReqBody = () => {
+const getCLReqBody = (name, job, experience, employer) => {
     return {
         "model": "text-davinci-003",
-        "prompt": `Generate a standout cover letter for a software developer with 4 month internship experience as a full stack web developer at Arctic AI and a 4 month internship as a web developer at Mikobyte Solutions.`,
+        "prompt": `My name is ${name}. Generate a standout cover letter for a ${job} ${employer ? `at ${employer}` : "" } with the following experience: ${experience.toString()}.`,
         "max_tokens": 1000,
         "temperature": 0
     }
@@ -57,8 +57,8 @@ export const getResume = async (job, experience) => {
     return JSON.parse(response.data.choices[0].text);
 }
 
-export const getCoverLetter = async () => {
-    const response = await axios.post(endpoint, getCLReqBody(), config);
+export const getCoverLetter = async (name, job, experience, employer) => {
+    const response = await axios.post(endpoint, getCLReqBody(name, job, experience, employer), config);
     return response.data.choices[0].text;
 }
 
