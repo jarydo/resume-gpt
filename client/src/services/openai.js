@@ -15,10 +15,10 @@ const getReqBody = (section, additionalInfo="") => {
     }
 }
 
-const getSummaryReqBody = (job, experience) => {
+const getSummaryReqBody = (job, experiences) => {
     return {
         "model": "text-davinci-003",
-        "prompt": `Generate a standout resume for a ${job} with the following experience: ${experience.toString()}. 
+        "prompt": `Generate a standout resume for a ${job} with the following experience: ${experiences.toString()}. 
         Create Summary of Qualifications, Work Experience, and Skill section formatted as a JSON object. For each Work Experience, create 3 points in an array. The object should look as follows: 
         {
             "Summary of Qualifications": [""],
@@ -32,33 +32,24 @@ const getSummaryReqBody = (job, experience) => {
         "max_tokens": 1000,
         "temperature": 0
     }
-
-    // {
-    //     "Summary of Qualifications": [""],
-    //     "Skills": [""],
-    //     "Work Experience": {
-    //         "Job 1": [""],
-    //         "Job 2": [""]
-    //     }
-    // }
 }
 
-const getCLReqBody = (name, job, experience, employer) => {
+const getCLReqBody = (name, job, experiences, employer) => {
     return {
         "model": "text-davinci-003",
-        "prompt": `My name is ${name}. Generate a standout cover letter for a ${job} ${employer ? `at ${employer}` : "" } with the following experience: ${experience.toString()}.`,
+        "prompt": `My name is ${name}. Generate a standout cover letter for a ${job} ${employer ? `at ${employer}` : "" } with the following experience: ${experiences.toString()}.`,
         "max_tokens": 1000,
         "temperature": 0
     }
 }
 
-export const getResume = async (job, experience) => {
-    const response = await axios.post(endpoint, getSummaryReqBody(job, experience), config);
+export const getResume = async (job, experiences) => {
+    const response = await axios.post(endpoint, getSummaryReqBody(job, experiences), config);
     return JSON.parse(response.data.choices[0].text);
 }
 
-export const getCoverLetter = async (name, job, experience, employer) => {
-    const response = await axios.post(endpoint, getCLReqBody(name, job, experience, employer), config);
+export const getCoverLetter = async (name, job, experiences, employer) => {
+    const response = await axios.post(endpoint, getCLReqBody(name, job, experiences, employer), config);
     return response.data.choices[0].text;
 }
 
