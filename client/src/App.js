@@ -4,7 +4,7 @@ import logo from './logo.svg';
 import './App.css';
 
 // import { Experience } from './components/experience';
-import { Button, Input, Experience, Skills, Summary } from './components';
+import { Button, Input, Experience, Skills, Summary, Extracurriculars } from './components';
 import { EditInput } from './components/Input/EditInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faDownload } from '@fortawesome/free-solid-svg-icons';
@@ -16,6 +16,9 @@ import { faTrash, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { Packer } from "docx";
 import { saveAs } from 'file-saver';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   const [name, setName] = useState();
   const [job, setJob] = useState();
@@ -24,14 +27,28 @@ function App() {
   const [resumeData, setResumeData] = useState();
   const [coverLetter, setCoverLetter] = useState();
 
+  const toastOptions = {
+    position: "bottom-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    rtl: false,
+    pauseOnFocusLoss: true,
+    draggable: true,
+    pauseOnHover: false,
+    theme: "light"
+  }
+
   const fetchData = async () => {
+    const toastId = toast.loading("Generating...");
     const resume = await getResume(job, experiences);
     const cover = await getCoverLetter(name, job, experiences, employer);
+    toast.update(toastId, { render: "Success!", type: toast.TYPE.SUCCESS, autoClose: 2000, closeButton: true, isLoading: false });
     setResumeData(resume);
     setCoverLetter(cover);
   }
 
-  const handleDownload = async (type) => {    
+  const handleDownload = async (type) => {  
     var preHtml = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML To Doc</title></head><body>";
     var postHtml = "</body></html>";
     var html = preHtml+document.getElementById(type).innerHTML+postHtml;
@@ -49,7 +66,6 @@ function App() {
         <div>Email</div>
         <div>Phone Number</div>
         <div>Linkedin</div>
-        <div>Github</div>
       </div>
     );
   }
@@ -62,9 +78,6 @@ function App() {
 
   }
 
-  const Extracurriculars = () => {
-
-  }
 
   const handleInputChange = (e, label) => {
     const labelMapping = {
@@ -73,7 +86,7 @@ function App() {
       "Employer": setEmployer
     }
 
-    if (label === "Work Experience") {
+    if (label === "Experience") {
       const newExperiences = [...experiences];
       newExperiences[0] = e.target.value;
       setExperiences(newExperiences);
@@ -108,16 +121,17 @@ function App() {
           <Input onChange={handleInputChange} label="Job" placeholder="Desired Job"/>
           <Input onChange={handleInputChange} label="Employer" placeholder="Employer"/>
           <div className="flex flex-col gap-2">
-            <Input onChange={handleInputChange} label="Work Experience" placeholder="Work Experience"/>
-            {experiences?.length > 1 && 
-              experiences.map((experience, id) => {
-                if (id == 0) return;  
-                return (
-                  <div className="flex gap-2">
-                    <EditInput onChange={handleExperienceChange} value={experience} placeholder="Work Experience" id={id} />
-                    <FontAwesomeIcon className="cursor-pointer h-8" onClick={() => removeExperience(id)} icon={faTrash} />
-                  </div>
-                );
+            {experiences.map((experience, id) => {
+                if (id == 0) {
+                  return <EditInput label="Experience" onChange={handleExperienceChange} value={experience} placeholder="Work/Extracurricular Experience" id={id}/>
+                } else {
+                  return (
+                    <div className="flex gap-2">
+                      <EditInput onChange={handleExperienceChange} value={experience} placeholder="Work/Extracurricular Experience" id={id} />
+                      <FontAwesomeIcon className="cursor-pointer h-8" onClick={() => removeExperience(id)} icon={faTrash} />
+                    </div>
+                  );
+                }  
               })}
             <Button onClick={() => addExperience()}>Add Experience</Button>
           </div>        
@@ -145,9 +159,22 @@ function App() {
             <Summary summary={resumeData["Summary of Qualifications"]}/>
             <Skills skills={resumeData["Skills"]}/>
             <Experience experience={resumeData["Work Experience"]}/>
+            <Extracurriculars extracurriculars={resumeData["Extracurriculars"]}/>
           </div>
         </div>}
       </header>
+      <ToastContainer 
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        // newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+      />
     </div>
   );
 }

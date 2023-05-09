@@ -19,7 +19,7 @@ const getSummaryReqBody = (job, experiences) => {
     return {
         "model": "text-davinci-003",
         "prompt": `Generate a standout resume for a ${job} with the following experience: ${experiences.toString()}. 
-        Create Summary of Qualifications, Work Experience, and Skill section formatted as a JSON object. For each Work Experience, create 3 points in an array. The object should look as follows: 
+        Create Summary of Qualifications, Work Experience, Extracurriculars, and Skill section formatted as a JSON object. For each Work Experience and Extracurricular, create 3 points in an array. The object should look as follows: 
         {
             "Summary of Qualifications": [""],
             "Skills": {
@@ -27,6 +27,9 @@ const getSummaryReqBody = (job, experiences) => {
             },
             "Work Experience": {
                 "Company 1 - Position": [""]
+            },
+            "Extracurriculars": {
+                "Activity": [""]
             }
         }`,
         "max_tokens": 1000,
