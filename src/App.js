@@ -7,8 +7,8 @@ import { saveAs } from 'file-saver';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { getSummaryOfQualifications, getWorkExperience, getResume, getCoverLetter } from './services/openai';
-import { Button, Input, Experience, Skills, Summary, Extracurriculars } from './components';
+import { getResume, getCoverLetter } from './services/openai';
+import { Button, Input, Experience, Skills, Summary, Extracurriculars, ContactInfo } from './components';
 import { EditInput } from './components/Input/EditInput';
 
 function App() {
@@ -16,6 +16,11 @@ function App() {
   const [job, setJob] = useState();
   const [employer, setEmployer] = useState();
   const [experiences, setExperiences] = useState([""]);
+  const [email, setEmail] = useState();
+  const [phoneNumber, setPhoneNumber] = useState();
+  const [linkedin, setLinkedin] = useState();
+  const [github, setGithub] = useState();
+
   const [resumeData, setResumeData] = useState();
   const [coverLetter, setCoverLetter] = useState();
 
@@ -38,18 +43,17 @@ function App() {
     });
 
     saveAs(blob, `${name}-${employer}-${type}-${new Date().toLocaleDateString()}.doc`);
-    saveAs(blob, `${name}-${employer}-${type}-${new Date().toLocaleDateString()}.pdf`);
   }
 
-  const ContactInfo = () => {
-    return (
-      <div className="flex justify-around">
-        <div>Email</div>
-        <div>Phone Number</div>
-        <div>Linkedin</div>
-      </div>
-    );
-  }
+  // const ContactInfo = () => {
+  //   return (
+  //     <div className="flex justify-around">
+  //       <div>Email</div>
+  //       <div>Phone Number</div>
+  //       <div>Linkedin</div>
+  //     </div>
+  //   );
+  // }
 
   // const Projects = () => {
 
@@ -64,7 +68,11 @@ function App() {
     const labelMapping = {
       "Name": setName,
       "Job": setJob,
-      "Employer": setEmployer
+      "Employer": setEmployer,
+      "Email": setEmail,
+      "Phone Number": setPhoneNumber,
+      "LinkedIn": setLinkedin,
+      "Github": setGithub
     }
 
     if (label === "Experience") {
@@ -97,7 +105,14 @@ function App() {
   return (
     <div className="m-10">
       <header className="flex flex-col gap-3">
-        <div className="flex justify-between">
+        <div className="grid grid-cols-5 mb-5">
+          <h2 className="mt-8">Contact Info (Optional):</h2>
+          <Input onChange={handleInputChange} label="Email" placeholder="Email"/>
+          <Input onChange={handleInputChange} label="Phone Number" placeholder="Phone Number"/>
+          <Input onChange={handleInputChange} label="LinkedIn" placeholder="LinkedIn"/>
+          <Input onChange={handleInputChange} label="Github" placeholder="Github"/>
+        </div>
+        <div className="grid grid-cols-5">
           <Input onChange={handleInputChange} label="Name" placeholder="Name"/>
           <Input onChange={handleInputChange} label="Job" placeholder="Desired Job"/>
           <Input onChange={handleInputChange} label="Employer" placeholder="Employer"/>
@@ -136,7 +151,7 @@ function App() {
           </div>
           <div id="resume" className="border-2 border-black px-10 py-5 flex flex-col gap-4">
             <h1 className="text-center">{name}</h1>
-            <ContactInfo />
+            <ContactInfo email="jaryd" linkedin="test"/>
             <Summary summary={resumeData["Summary of Qualifications"]}/>
             <Skills skills={resumeData["Skills"]}/>
             <Experience experience={resumeData["Work Experience"]}/>
