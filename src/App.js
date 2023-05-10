@@ -1,23 +1,15 @@
-import { useEffect, useState } from 'react';
-import { getSummaryOfQualifications, getWorkExperience, getResume, getCoverLetter } from './services/openai';
-import logo from './logo.svg';
 import './App.css';
+import { useEffect, useState } from 'react';
 
-// import { Experience } from './components/experience';
-import { Button, Input, Experience, Skills, Summary, Extracurriculars } from './components';
-import { EditInput } from './components/Input/EditInput';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faDownload } from '@fortawesome/free-solid-svg-icons';
-
-//import HTMLtoDOCX from 'html-to-docx';
-// import htmlDocx from 'html-docx-js';
-//import PizZip from 'pizzip';
-//import docxtemplater from 'docxtemplater';
-import { Packer } from "docx";
 import { saveAs } from 'file-saver';
-
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { getSummaryOfQualifications, getWorkExperience, getResume, getCoverLetter } from './services/openai';
+import { Button, Input, Experience, Skills, Summary, Extracurriculars } from './components';
+import { EditInput } from './components/Input/EditInput';
 
 function App() {
   const [name, setName] = useState();
@@ -26,18 +18,6 @@ function App() {
   const [experiences, setExperiences] = useState([""]);
   const [resumeData, setResumeData] = useState();
   const [coverLetter, setCoverLetter] = useState();
-
-  const toastOptions = {
-    position: "bottom-right",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    rtl: false,
-    pauseOnFocusLoss: true,
-    draggable: true,
-    pauseOnHover: false,
-    theme: "light"
-  }
 
   const fetchData = async () => {
     const toastId = toast.loading("Generating...");
@@ -58,6 +38,7 @@ function App() {
     });
 
     saveAs(blob, `${name}-${employer}-${type}-${new Date().toLocaleDateString()}.doc`);
+    saveAs(blob, `${name}-${employer}-${type}-${new Date().toLocaleDateString()}.pdf`);
   }
 
   const ContactInfo = () => {
@@ -70,13 +51,13 @@ function App() {
     );
   }
 
-  const Projects = () => {
+  // const Projects = () => {
 
-  }
+  // }
 
-  const Education = () => {
+  // const Education = () => {
 
-  }
+  // }
 
 
   const handleInputChange = (e, label) => {
@@ -167,7 +148,6 @@ function App() {
         position="bottom-right"
         autoClose={3000}
         hideProgressBar={false}
-        // newestOnTop
         closeOnClick
         rtl={false}
         pauseOnFocusLoss
