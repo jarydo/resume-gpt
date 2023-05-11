@@ -19,6 +19,8 @@ NOTE: A GPT-3.5 API subscription is required.
 
 And that's it!
 
+When inputting your experiences or education, follow the format: "degree/job at school/employer"
+
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
