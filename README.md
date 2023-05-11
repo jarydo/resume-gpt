@@ -5,7 +5,7 @@ first draft of your resume. Overthinking, self-doubt, imposter syndrome...these 
 of many feelings you might face. The purpose of this tool is to help the user get over that
 initial step. Utilizing the GPT-3.5 API, Resume-GPT takes in your desired job, employer,
 previous work and extracurricular experience, and uses artificial intelligence to create
-a downloadable cover and resume. This is not meant to be intended to be submitted as is - 
+a downloadable cover and resume. This is not meant to be submitted as is - 
 but it is a great starting point.
 
 NOTE: A GPT-3.5 API subscription is required.
