@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { getResume, getCoverLetter } from './services/openai';
-import { Button, Input, Experience, Skills, Summary, Extracurriculars, ContactInfo } from './components';
+import { Button, Input, Experience, Skills, Summary, Extracurriculars, ContactInfo, Education } from './components';
 import { EditInput } from './components/Input/EditInput';
 
 function App() {
@@ -20,17 +20,22 @@ function App() {
   const [phoneNumber, setPhoneNumber] = useState();
   const [linkedin, setLinkedin] = useState();
   const [github, setGithub] = useState();
+  const [education, setEducation] = useState();
 
   const [resumeData, setResumeData] = useState();
   const [coverLetter, setCoverLetter] = useState();
 
   const fetchData = async () => {
     const toastId = toast.loading("Generating...");
-    const resume = await getResume(job, experiences);
-    const cover = await getCoverLetter(name, job, experiences, employer);
-    toast.update(toastId, { render: "Success!", type: toast.TYPE.SUCCESS, autoClose: 2000, closeButton: true, isLoading: false });
-    setResumeData(resume);
-    setCoverLetter(cover);
+    try {
+      const resume = await getResume(job, education, experiences);
+      const cover = await getCoverLetter(name, job, education, experiences, employer);
+      toast.update(toastId, { render: "Success!", type: toast.TYPE.SUCCESS, autoClose: 2000, closeButton: true, isLoading: false });
+      setResumeData(resume);
+      setCoverLetter(cover);
+    } catch (e) {
+      toast.update(toastId, { render: "Error: " + e, type: toast.TYPE.ERROR, autoClose: 10000, closeButton: true, isLoading: false });
+    }
   }
 
   const handleDownload = async (type) => {  
@@ -45,25 +50,6 @@ function App() {
     saveAs(blob, `${name}-${employer}-${type}-${new Date().toLocaleDateString()}.doc`);
   }
 
-  // const ContactInfo = () => {
-  //   return (
-  //     <div className="flex justify-around">
-  //       <div>Email</div>
-  //       <div>Phone Number</div>
-  //       <div>Linkedin</div>
-  //     </div>
-  //   );
-  // }
-
-  // const Projects = () => {
-
-  // }
-
-  // const Education = () => {
-
-  // }
-
-
   const handleInputChange = (e, label) => {
     const labelMapping = {
       "Name": setName,
@@ -72,7 +58,8 @@ function App() {
       "Email": setEmail,
       "Phone Number": setPhoneNumber,
       "LinkedIn": setLinkedin,
-      "Github": setGithub
+      "Github": setGithub,
+      "Education": setEducation
     }
 
     if (label === "Experience") {
@@ -116,6 +103,7 @@ function App() {
           <Input onChange={handleInputChange} label="Name" placeholder="Name"/>
           <Input onChange={handleInputChange} label="Job" placeholder="Desired Job"/>
           <Input onChange={handleInputChange} label="Employer" placeholder="Employer"/>
+          <Input onChange={handleInputChange} label="Education" placeholder="Education"/>
           <div className="flex flex-col gap-2">
             {experiences.map((experience, id) => {
                 if (id == 0) {
@@ -131,8 +119,8 @@ function App() {
               })}
             <Button onClick={() => addExperience()}>Add Experience</Button>
           </div>        
-          <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10 mt-8" onClick={() => fetchData()}>Generate</Button>
         </div>
+        <Button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded h-10 mt-4 self-end" onClick={() => fetchData()}>Generate</Button>
         
         {coverLetter && <div>
           <div className="flex justify-between mb-3">
@@ -151,10 +139,11 @@ function App() {
           </div>
           <div id="resume" className="border-2 border-black px-10 py-5 flex flex-col gap-4">
             <h1 className="text-center">{name}</h1>
-            <ContactInfo email="jaryd" linkedin="test"/>
+            <ContactInfo email={email} number={phoneNumber} linkedin={linkedin} github={github}/>
             <Summary summary={resumeData["Summary of Qualifications"]}/>
             <Skills skills={resumeData["Skills"]}/>
             <Experience experience={resumeData["Work Experience"]}/>
+            <Education education={resumeData["Education"]}/>
             <Extracurriculars extracurriculars={resumeData["Extracurriculars"]}/>
           </div>
         </div>}

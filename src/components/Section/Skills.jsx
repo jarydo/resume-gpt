@@ -8,7 +8,7 @@ export const Skills = ({ skills }) => {
                     return (
                         <div>
                             <b>{category}</b>
-                            <div>{skills[category].toString()}</div>
+                            <div>{skills[category].join(", ")}</div>
                         </div>
                     );
                 })}
