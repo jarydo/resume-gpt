@@ -8,7 +8,7 @@ previous work and extracurricular experience, and uses artificial intelligence t
 a downloadable cover and resume. This is not meant to be submitted as is - 
 but it is a great starting point.
 
-NOTE: A GPT-3.5 API subscription is required.
+NOTE: A OpenAI GPT-3.5 subscription is required.
 
 ## How to Run
 
